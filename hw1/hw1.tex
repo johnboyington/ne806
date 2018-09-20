@@ -201,18 +201,20 @@ $$ \boxed{4.54 \times 10^{-5}} $$
 \bigbreak
 \textbf{Solution}
 \bigbreak
-(a) From Slide 7 of Lecture 3 from NE806: Neutronics, the following equation is provided to determine the solid angle of the given geometry:
-\bigbreak
-\begin{equation*}
-   \Omega  = 2\pi\bigg(1-\frac{D}{\sqrt{D^2+r^2}}\bigg)
-\end{equation*}
-\bigbreak
-where $D$ is the distance between point $P$, and the disk. Based on the given parameters, the solid angle is found to be:
-\bigbreak
-\begin{equation*}
-   \Omega  = 2\pi\bigg(1-\frac{100 cm}{\sqrt{(100 cm)^2+\frac{64cm^2}{\pi}}}\bigg) = \boxed{0.006390 \quad steradians}
-\end{equation*}
-\bigbreak
+(a)
+
+In this case, the disk is rotationally invariant in the $\psi$ direction.
+The $\theta$ value is given by the triangular relationship between the radius of the circle, $\frac{8}{\sqrt{\pi}}$ and the distance from the point, $100$.
+
+$$ \theta = \tan^{-1}(\frac{8}{\sqrt{\pi 100}}) $$
+
+We set up an integral around the circle using this value for $\theta$ in spherical coordinates.
+
+$$ \Omega = \int_0^{\theta_m} \int_0^{2\pi} sin \theta d \psi d\theta = \int_0^{\theta} \int_0^{2\pi} sin \theta d \psi d\theta $$
+
+And solving gives us:
+
+$$ \Omega = \int_0^{\theta} 2 \pi sin \theta d \theta = -2 \pi cos \theta \bigg|_0^{\theta} = -2 \pi ( cos(0.0451) - 1) \approx \boxed{6.390 \times 10^{-3}} $$
 
 
 (b)
@@ -231,28 +233,56 @@ $$ \boxed{\Omega \approx 6.14757 \times 10^{-3}}  $$
 (b) (10 points) What is the scatter angle in the LAB frame? \newline
 (c) (10 points) What is the energy of the scattered neutron? \newline
 \textbf{Solution}
-(a) From page 42 of Deuderstadt \& Hamilton, the following equation is given to determine the energy change of the neutron based on the atomic weight, $A$ of the target:
-\bigbreak
-\begin{equation*}
-   E_f = \bigg[\frac{(1+\alpha)+(1-\alpha)cos(\theta_c)}{2}\bigg]E_i, \quad where \quad \alpha=\bigg(\frac{A-1}{A+1}\bigg)^2
-\end{equation*}
-\bigbreak
-The Q value can be defined as the energy change of the neutron, $Q=E_i-E_f$, and $\alpha=.9311$ thus:
-\bigbreak
-\begin{equation*}
-   Q = E_i\bigg(1- \bigg[\frac{(1.9311)+(0.0689)cos(45^\circ)}{2}\bigg]\bigg) \approx \boxed{0.0101 \quad MeV}
-\end{equation*}
-\bigbreak
-(b) The scatter angle in the lab frame can be determine with an equation from page 41 of Deuderstadt \& Hamilton,
-\bigbreak
-\begin{equation*}
-   \theta_L = tan^{-1}\bigg(\frac{sin(\theta_c)}{A^{-1}+cos(\theta_c)}\bigg) \approx \boxed{44.28^\circ}
-\end{equation*}
-\bigbreak
-An interesting note about this result: the lab frame scatter angle and the COM frame scatter angle are very similar.
-\bigbreak
-(c) The energy of the neutron can be determined by taking the initial energy $E_i$ minus the Q-value:
-\begin{equation*}
-   E_f = 1 \quad MeV \quad - \quad 0.0101 \quad MeV \approx \boxed{0.9899 \quad MeV}
-\end{equation*}
+
+
+ 
+(a)
+The $Q$ value for this reaction is zero.
+It is an elastic scatter, and therefore, no energy is released or lost in the exchange.
+
+
+
+(b)
+The following equations relate total kinetic energy in the LAB and Center-Of-Mass systems (COM).
+$$  \textnormal{LAB:  }E_L = \frac{1}{2} m v_L^2 + \frac{1}{2} M V_L^2  $$
+$$  \textnormal{COM:  }E_C = \frac{1}{2} m v_C^2 + \frac{1}{2} M V_C^2  $$
+
+
+We can use these relationships to produce the following equation:
+$$ E_C = \frac{M}{m+M}E_L = \frac{A}{1+A}E_L $$
+
+
+Application of conservation of energy and momentum give us:
+
+$$ v'_C = v_C = \frac{A}{A+1} v_L  $$
+$$ V'_C = V_C = \frac{1}{A+1} v_L $$
+
+
+The following equations can be found in Deuderstadt \& Hamiltons "Nuclear Reactor Analysis":
+$$ v'_L \sin \theta_L  = v'_C \sin \theta_C, $$
+$$ v'_L \cos \theta_L  = v_{CM} + v'_C \cos \theta_C $$
+
+
+Dividing the two above equations and using the momentum relationships, we arrive at:
+$$ \tan(\theta_L) = \frac{\sin \theta_C}{\frac{1}{A} + \cos \theta_C} $$
+
+
+For a $45^\circ$ scatter off a nuclide with atomic mass of 56 the scattering angle will be $\boxed{44.285^\circ}$
+
+
+
+
+(c)
+Used in Problem 1 above:
+
+$$ E_f = \bigg[ \frac{(1+\alpha)+(1-\alpha) \cos \theta_c}{2} \bigg] E_i $$
+
+
+Where $\alpha = \big( \frac{A-1}{A+1} \big)^2$.
+
+In this case, $\alpha = 0.93105$.
+
+$$ E_f = \bigg[ 0.9655 + 0.03447\cos(45^\circ) \bigg] E_i = 0.98990 \qquad \textnormal{or,} \qquad \boxed{0.9899 \textnormal{ MeV}} $$
+
+
 \end{document}
