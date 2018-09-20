@@ -154,39 +154,42 @@ Substituting into the equation for $f(\omega_c)$, we get
 
 \textbf{Solution}
 \bigbreak
-(a) The average of a PDf is given with the following equation:
+(a) 
+The average of a PDf is given with the following equation:
 
 $$ \bar{x} = \int_a^b x f(x) dx $$
 
-$$ \bar{x} = \int_{0}^{\infty}{x\lambda e^{-\lambda x}dx} = \lambda \frac{1}{\lambda^2} = \frac{1}{\lambda} $$
+so,
+
+$$ \bar{x} = \int_{0}^{\infty}{x\Sigma e^{-\Sigma x}dx} = \frac{1}{\Sigma} $$
+
+$$ \boxed{ \bar{x} = \frac{1}{\Sigma}} $$
 
 
-Thus, for the given expression: $\bar{d}$ = \boxed{\frac{1}{\Sigma}}
+(b)
+The variance for a PDF is given with the following equation:
+
+$$ var(x) = \int_{a}^{b}{(x-\bar{x})^2f(x)dx} = \frac{1}{\Sigma}, \quad where \quad f(x) = \Sigma*e^{-\Sigma x} $$
+
+$$ \boxed{ var(x) = \frac{1}{\Sigma^2}} $$
 
 
-(b) The variance for a PDF is given with the following equation:
-\bigbreak
-\begin{equation*}
-    var(x) = \int_{a}^{b}{(x-\bar{x})^2f(x)dx} = \frac{1}{\lambda}, \quad where \quad f(x) = \lambda*e^{-\lambda x}
-\end{equation*}
-\bigbreak
-Thus, for the given expression: $var(d)$ = \boxed{\frac{1}{\Sigma^2}}
-\bigbreak
+(c) 
+Interaction probability within a region is given by the integral over that region.
+
+$$ f(x) = \int_0^{0.5} 2 e^{-2x}dx $$
+$$ -e^{-2x} |^{0.5}_0 $$
+$$ 1 - e^{-1} \approx $$
+$$ \boxed{0.632} $$
 
 
-(c) Given the conditions in the problem statement, the following equation is used to determine the probability of the neutron interacting within the first 0.5 cm of travel:
-\bigbreak
-\begin{equation*}
-    P(0\Rightarrow0.5cm) = \int_{0}^{0.5}2e^{-2x}dx = 0.6321 \approx \boxed{63.21\%}
-\end{equation*}
-\bigbreak
+(d)
+Non-interaction probability within a region is 1 minus the integral in that region.
+
+$$ 1 - (1 - e^{-10}) \approx $$
+$$ \boxed{4.54 \times 10^{-5}} $$
 
 
-(d) Given the conditions in the problem statement, the following equation is used to determine the probability of the neutron not interacting within the first 5 cm of travel:
-\bigbreak
-\begin{equation*}
-    P(0\Rightarrow5.0cm) = 1 - \int_{0}^{5.0}2e^{-2x}dx = 1 - 0.99995 \approx \boxed{0.005\%}
-\end{equation*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \textbf{Problem 3:} Consider a circular disk of area $A=64 cm^2$ at a distance of $D=100 cm$ from a point $P$. \newline
@@ -210,18 +213,15 @@ where $D$ is the distance between point $P$, and the disk. Based on the given pa
    \Omega  = 2\pi\bigg(1-\frac{100 cm}{\sqrt{(100 cm)^2+\frac{64cm^2}{\pi}}}\bigg) = \boxed{0.006390 \quad steradians}
 \end{equation*}
 \bigbreak
-(b) The following diagram illustrates an alternative method to determine the solid angle of the disk:
-\begin{figure}[h!]
-                \includegraphics[width=0.6\linewidth]{HW_1_P3b.JPG}
-\end{figure}
-\bigbreak
-The solid angle of the disk to the point is equal to the ratio of the area of the disk to the area of the ring of $D2-D1$ multiplied by the solid angle of $D2-D1$. The radius of the disk is given as $r=\sqrt{\frac{64cm^2}{\pi}}=4.514 cm$. Thus the following equation can be used to determine the solid angle:
-\bigbreak
-\begin{align*}
-   \Omega  &= \bigg(\frac{64cm^2}{\pi((24.5cm)^2-(15.5cm)^2)}\bigg)*2\pi\bigg[\bigg( 1- \frac{100cm}{\sqrt{(100cm)^2+(24.5cm)^2}}\bigg)-\bigg( 1- \frac{100cm}{\sqrt{(100cm)^2+(15.5cm)^2}}\bigg)\bigg] \\
-   &= \boxed{0.006018 \quad steradians}
-\end{align*}
-\bigbreak
+
+
+(b)
+In order to avoid the difficulty incurred in the integral this problem would present, I utilized my knowledge from Monte Carlo class and solved this problem with MCNP6.
+I used an isotropic point source at point P, then created a surface to tally over in the area of the circle shown in the figure.
+All material was void, and the final flux result was simply multiplied by $4 \pi$ to obtain the solid angle.
+One billion histories were used in the simulation.
+
+$$ \boxed{\Omega \approx 6.14757 \times 10^{-3}}  $$
  
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
