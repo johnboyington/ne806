@@ -19,6 +19,7 @@ ax.set_ylabel('$f(\psi)$')
 w = np.zeros(100)
 psi = np.linspace(0, 2*np.pi, 100)
 ax.plot(psi, f2(w, psi), color='k')
+fig.savefig('p1_1.png', dpi=300)
 
 
 fig = plt.figure(1)
@@ -28,3 +29,4 @@ ax.set_ylabel('$f(\omega_c)$')
 
 w = np.linspace(-1, 1, 100)
 ax.plot(w, f1(w, psi), color='k')
+fig.savefig('p1_2.png', dpi=300)
