@@ -1,0 +1,126 @@
+
+%This is a Tex Version of NE 806 Homework Template
+%
+\documentclass{amsart}
+\setlength{\textheight}{9in}
+\setlength{\topmargin}{-0.25in}
+\setlength{\textwidth}{7in}
+\setlength{\evensidemargin}{-0.25in}
+\setlength{\oddsidemargin}{-0.25in}
+\usepackage{amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx} 
+\usepackage[export]{adjustbox}
+% needed to include these graphics
+%\graphicspath{{./Pictures/}}      % only in case you want to keep the pictures in a separate
+                                  % subdirectory; also see the appropriate line below
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{framed}
+\newcounter{temp}
+\theoremstyle{definition}
+\newtheorem{Thm}{Theorem}
+\newtheorem{Prob}{Problem}
+\newtheorem*{Def}{Definition}
+\newtheorem*{Ans}{Answer}
+\newcommand{\dis}{\displaystyle}
+\newcommand{\dlim}{\dis\lim}
+\newcommand{\dsum}{\dis\sum}
+\newcommand{\dint}{\dis\int}
+\newcommand{\ddint}{\dint\!\!\dint}
+\newcommand{\dddint}{\dint\!\!\dint\!\!\dint}
+\newcommand{\dt}{\text{d}t}
+\newcommand{\dA}{\text{d}A}
+\newcommand{\dV}{\text{d}V}
+\newcommand{\dx}{\text{d}x}
+\newcommand{\dy}{\text{d}y}
+\newcommand{\dz}{\text{d}z}
+\newcommand{\dw}{\text{d}w}
+\newcommand{\du}{\text{d}u}
+\newcommand{\dv}{\text{d}v}
+\newcommand{\ds}{\text{d}s}
+\newcommand{\dr}{\text{d}r}
+\newcommand{\dth}{\text{d}\theta}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bbN}{\mathbb{N}}
+\newcommand{\bbQ}{\mathbb{Q}}
+\newcommand{\bbZ}{\mathbb{Z}}
+\newcommand{\bbC}{\mathbb{C}}
+\newcommand{\dd}[2]{\dfrac{\text{d}#1}{\text{d}#2}}
+\newcommand{\dydx}{\dfrac{\text{d}y}{\text{d}x}}
+\renewcommand{\labelenumi}{{\normalfont \arabic{enumi}.}}
+\renewcommand{\labelenumii}{{\normalfont \alph{enumii}.}}
+\renewcommand{\labelenumiii}{{\normalfont \roman{enumiii}.}}
+\font \bggbf cmbx18 scaled \magstep2
+\font \bgbf cmbx10 scaled \magstep2
+\usepackage{fancyhdr}
+\usepackage{lipsum}
+% Clear the header and footer
+\fancyhead{}
+\fancyfoot{}
+% Set the right side of the footer to be the page number
+\rfoot{\thepage}
+\fancyhf{}
+\pagestyle{fancy}
+\begin{document}
+\LARGE{NE-806: Neutronics}
+ 
+\large
+Homework \#3 due Thurs. October 23, 2018
+ 
+Solutions by: John Boyington
+\newline
+\bigskip
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{Problem 1:} Consider a homogeneous infinite slab of thickness $2T$ located in a vacuum. Write a
+Monte Carlo program to calculate (a) $k_{eff}$, (b) the neutron leakage probability $PL$, and (c) the critical flux density distribution. Assume that a one-speed transport model can be used and that scattering and fission neutrons are emitted isotropically in the laboratory coordinate system.
+\bigbreak
+Your code should include the following features:
+\bigbreak
+(a) the use of multiple batches (or games) so as to permit an estimate of the standard deviation of the final result for $k_{eff}$ and $PL$\newline
+\bigbreak
+(b) the use of a spatially uniform source distribution for the first game, and then, for later games, a source that is adaptively distributed according to the fission distribution\newline
+\bigbreak
+(c) accumulation of the spatial distribution of fission events from game to game (after the first few games) so as to obtain an increasingly better estimate of the fission source distribution (as well as the critical flux density profile)\newline
+\bigbreak
+Use your Monte Carlo code to obtain data to create a plot of $k_{eff}$ versus slab thickness $2T$ over the range from 30 to 80 cm for a slab material with the following nuclear properties:
+\bigbreak
+\begin{equation*}
+    \Sigma_c = 0.011437\quad cm^{-1}, \quad \Sigma_s = 0.05\quad cm^{-1}, \quad \Sigma_f = 0.013\quad cm^{-1}, \quad \nu=2.5
+\end{equation*}
+\bigbreak
+Of particular interest is the thickness $2T = 53.744$ cm. Find the critical thickness for this slab and plot the critical flux profile.
+\bigbreak
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{Solution}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\textbf{Problem 2:}Write anther computer program to solve for the critical value of $c$, $c_{crit}$, using the one speed integral transport equation with isotropic fission and scattering, for an infinite bare homogeneous slab. With the results from your program, plot $ln (c_{crit} - 1)$ versus the slab thickness $2T$ for $0<2T<10$ mean-free-path lengths. HINT: as a check on your program, you should obtain $c_{crit}$ = 1.277101824 . . . when the thickness of the slab is 2 mean-free-path lengths.
+\bigbreak
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{Solution}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\textbf{Problem 3:} Use your NTE code to find the critical thickness of the slab analyzed with the Monte Carlo method in your first problem set $\Sigma_c = 0.011437\quad cm^{-1}, \quad \Sigma_s = 0.05\quad cm^{-1}, \quad \Sigma_f = 0.013\quad cm^{-1}, \quad \nu=2.5$. Compare the critical flux profiles found by each method.
+\bigbreak
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{Solution}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\textbf{Problem 4:}Compare the critical flux profiles obtained with transport and diffusion theories for both a thin and thick slab (say, for example, T = 0.5 and T = 10 mean-free path lengths).
+\bigbreak
+Complete documentation of your programs, including theory, example outputs, and a detailed discussion of your results is required.
+\bigbreak
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{Solution}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+

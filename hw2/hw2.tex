@@ -1,0 +1,188 @@
+All,
+ 
+Here is the link to the overleaf. If the link doesn’t work the text is copied below.
+ 
+%This is a Tex Version of NE 806 Homework Template
+%
+\documentclass{amsart}
+\setlength{\textheight}{9in}
+\setlength{\topmargin}{-0.25in}
+\setlength{\textwidth}{7in}
+\setlength{\evensidemargin}{-0.25in}
+\setlength{\oddsidemargin}{-0.25in}
+\usepackage{amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx} 
+\usepackage[export]{adjustbox}
+% needed to include these graphics
+%\graphicspath{{./Pictures/}}      % only in case you want to keep the pictures in a separate
+                                  % subdirectory; also see the appropriate line below
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{framed}
+\newcounter{temp}
+\theoremstyle{definition}
+\newtheorem{Thm}{Theorem}
+\newtheorem{Prob}{Problem}
+\newtheorem*{Def}{Definition}
+\newtheorem*{Ans}{Answer}
+\newcommand{\dis}{\displaystyle}
+\newcommand{\dlim}{\dis\lim}
+\newcommand{\dsum}{\dis\sum}
+\newcommand{\dint}{\dis\int}
+\newcommand{\ddint}{\dint\!\!\dint}
+\newcommand{\dddint}{\dint\!\!\dint\!\!\dint}
+\newcommand{\dt}{\text{d}t}
+\newcommand{\dA}{\text{d}A}
+\newcommand{\dV}{\text{d}V}
+\newcommand{\dx}{\text{d}x}
+\newcommand{\dy}{\text{d}y}
+\newcommand{\dz}{\text{d}z}
+\newcommand{\dw}{\text{d}w}
+\newcommand{\du}{\text{d}u}
+\newcommand{\dv}{\text{d}v}
+\newcommand{\ds}{\text{d}s}
+\newcommand{\dr}{\text{d}r}
+\newcommand{\dth}{\text{d}\theta}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bbN}{\mathbb{N}}
+\newcommand{\bbQ}{\mathbb{Q}}
+\newcommand{\bbZ}{\mathbb{Z}}
+\newcommand{\bbC}{\mathbb{C}}
+\newcommand{\dd}[2]{\dfrac{\text{d}#1}{\text{d}#2}}
+\newcommand{\dydx}{\dfrac{\text{d}y}{\text{d}x}}
+\renewcommand{\labelenumi}{{\normalfont \arabic{enumi}.}}
+\renewcommand{\labelenumii}{{\normalfont \alph{enumii}.}}
+\renewcommand{\labelenumiii}{{\normalfont \roman{enumiii}.}}
+\font \bggbf cmbx18 scaled \magstep2
+\font \bgbf cmbx10 scaled \magstep2
+\usepackage{fancyhdr}
+\usepackage{lipsum}
+% Clear the header and footer
+\fancyhead{}
+\fancyfoot{}
+% Set the right side of the footer to be the page number
+\rfoot{\thepage}
+\fancyhf{}
+\pagestyle{fancy}
+\begin{document}
+\LARGE{NE-806: Neutronics}
+ 
+\large
+Homework Problem Set No. 2 due Thurs. October 4, 2018
+ 
+Solutions by John Boyington
+Note: Code used in this assignment is all located at https://github.com/johnboyington/ne806 and available for download/use.
+\newline
+\bigskip
+ 
+% ----------------------------------------------------------------------------------------------------- 
+\textbf{Problem 1:} Four parallel neutron beams have identical intensities of $3\times 10^6$ neutrons $cm^{-2} s^{-2}$ and intersect within a volume $V$ about the origin. The four beams are mono-energetic at the energy $E_0$. The first beam is in the x-direction, the second beam is in the -y-direction, the third beam is in the z-direction, and the fourth beam is in a direction given by
+\begin{equation*}
+    \hat{\Omega} = 0.5000 \hat{i_x} + 0.7071\hat{i_j} + 0.5000\hat{i_z}
+\end{equation*}
+(a) (5 points) What is the flux density at every point in the volume $V$?\newline
+(b) (5 points) What is the current density at every point in the volume $V$?\newline
+(c) (5 points) What is the magnitude of the current density at every point in $V$?\newline
+(d) (5 points) What is the net number of neutrons crossing unit area in $V$ in the y-direction?\newline
+ 
+\textbf{Solution}
+
+(a) The flux density is simply 4 times the per-beam intensity: \\
+\boxed{1.20 \times 10^7 cm^{-2} s^{-1}} \\
+
+(b) Current density is obtained by summing the individual vector components of the beams: \\
+\boxed{(4.50 \times 10^6) \hat{i}_x + (-8.79 \times 10^5) \hat{i}_y + (4.50 \times 10^6) \hat{i}_z cm^{-2} s^{-1}}
+
+(c) Taking the 2-norm of the vector gives the magnitude: \\
+\boxed{6.42 \times 10^6 cm^{-2} s^{-1}}
+
+(d) Neutrons crossing the y-direction is the just the $y$ component of the current density vector: \\
+\boxed{8.79 \times 10^5 cm^{-2} s^{-1}}
+
+
+
+% -----------------------------------------------------------------------------------------------------
+\newpage
+\textbf{Problem 2:} You have determined that the angular flux density in a given problem can be expressed as
+\begin{equation*}
+    \psi(x,\mu) = 40,000 e^{-x/3} \bigg[ 2+ \sin(x \mu/3) \bigg] \qquad \textnormal{for} \qquad 0 \leq x \leq 10, \qquad -1 \leq \mu \leq 1
+\end{equation*}
+(a) (10 points) Use Monte Carlo to estimate total flux density at $x=x_0=5$. \newline
+(b) (10 points) Give the precision of your estimate.\newline
+ 
+\textbf{Solution}
+
+(a) Finding the flux density at $x=x_0=0.5$ is like integrating the equation over $\mu$ while holding $x$ constant.
+The following equation is used to find an integral with Monte Carlo in this case:
+$$ \int^a_b f(x) \approx \frac{b - a}{N} \sum^N_i f(x, \rho_i) $$
+
+This equation results in the following solution: \\
+\boxed{3.02 \times 10^4 cm^{-2} s^{-1}}
+
+(b)
+And the following equation gives the error in this integral:
+
+$$ \sigma \approx \frac{1}{\sqrt{N}} \frac{N}{N-1} \sqrt{\bar{x^2} - \bar{x}^2} $$
+
+Applying this and using 1 million histories gives: \\
+\boxed{5.49 \times 10^0 cm^{-2} s^{-1}}
+
+
+% ----------------------------------------------------------------------------------------------------- 
+\newpage
+\textbf{Problem 3:} Lambert's law states that the angular intensity of the radiation leaving a surface varies as the cosine, $\omega$, of the angle between the outward normal and the radiation direction. Consider a medium that emits neutrons from the surface into a vacuum according to Lambert's law. \newline
+(a) (5 points) What is the PDF for $\omega$?\newline
+(b) (5 points) What is the CDF for $\omega$?\newline
+(c) (5 points) What is the mean value of $\omega$?\newline
+(d) (5 points) What fraction of neutrons are emitted at angles between 30$^\circ$ and 45$^\circ$?\newline
+ 
+\textbf{Solution}
+
+
+
+% ----------------------------------------------------------------------------------------------------- 
+\newpage
+\textbf{Problem 4:} (40 points) Consider a critical slab reactor of width $T=1$ mfp. Assume a quadrature has been applied to the NTE that leads to the eigenvalue equation
+\begin{equation*}
+    B\Phi = \lambda \Phi,
+\end{equation*}
+with $\lambda = \frac{2}{c}$ and $B$ given as follows \newline
+\begin{table}[h!]
+\begin{tabular}{llllllllll}
+0.5109 & 0.1823 & 0.1223 & 0.0906 & 0.0702 & 0.056  & 0.0454 & 0.0374 & 0.0311 & 0.026  \\
+0.1823 & 0.3555 & 0.1823 & 0.1223 & 0.0906 & 0.0702 & 0.056  & 0.0454 & 0.0374 & 0.0311 \\
+0.1223 & 0.1823 & 0.3564 & 0.1823 & 0.1223 & 0.0906 & 0.0702 & 0.056  & 0.0454 & 0.0374 \\
+0.0906 & 0.1223 & 0.1823 & 0.3568 & 0.1823 & 0.1223 & 0.0906 & 0.0702 & 0.056  & 0.0454 \\
+0.0702 & 0.0906 & 0.1223 & 0.1823 & 0.357  & 0.1823 & 0.1223 & 0.0906 & 0.0702 & 0.056  \\
+0.056  & 0.0702 & 0.0906 & 0.1223 & 0.1823 & 0.357  & 0.1823 & 0.1223 & 0.0906 & 0.0702 \\
+0.0454 & 0.056  & 0.0702 & 0.0906 & 0.1223 & 0.1823 & 0.3568 & 0.1823 & 0.1223 & 0.0906 \\
+0.0374 & 0.0454 & 0.056  & 0.0702 & 0.0906 & 0.1223 & 0.1823 & 0.3564 & 0.1823 & 0.1223 \\
+0.0311 & 0.0374 & 0.0454 & 0.056  & 0.0702 & 0.0906 & 0.1223 & 0.1823 & 0.3555 & 0.1823 \\
+0.026  & 0.0311 & 0.0374 & 0.0454 & 0.056  & 0.0702 & 0.0906 & 0.1223 & 0.1823 & 0.5109
+\end{tabular}
+\end{table}
+ 
+Use the power method to estimate $c_{crit}$ to four decimal places. Show your work
+ 
+\textbf{Solution}
+
+First, set $\phi$ to some starting vector, in my case, a vector of randomized integers was used.
+Then, given N iterations, the following is done:
+
+$$ \phi_{k1} = B \phi_k $$
+$$ \phi_{k1_n} = \phi_{k1} / MAX(\phi_{k1}) $$
+$$ c = \frac{2}{\phi_{k1_n}} $$
+$$ \phi_k = \frac{\phi_{k1}}{\phi_{k1_n}} $$
+
+using an initial value of $c=1$.
+This yielded the following approximation for $c_{crit}$:
+
+
+\boxed{c_{crit} \approx 1.5861}
+ 
+ 
+ 
+\end{document}
