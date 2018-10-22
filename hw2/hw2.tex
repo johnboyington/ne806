@@ -1,7 +1,3 @@
-All,
- 
-Here is the link to the overleaf. If the link doesn’t work the text is copied below.
- 
 %This is a Tex Version of NE 806 Homework Template
 %
 \documentclass{amsart}
@@ -67,13 +63,15 @@ Here is the link to the overleaf. If the link doesn’t work the text is copied 
 \rfoot{\thepage}
 \fancyhf{}
 \pagestyle{fancy}
+
 \begin{document}
+
 \LARGE{NE-806: Neutronics}
  
 \large
 Homework Problem Set No. 2 due Thurs. October 4, 2018
  
-Solutions by John Boyington
+Solutions by John Boyington \\
 Note: Code used in this assignment is all located at https://github.com/johnboyington/ne806 and available for download/use.
 \newline
 \bigskip
@@ -141,6 +139,17 @@ Applying this and using 1 million histories gives: \\
  
 \textbf{Solution}
 
+(a) The PDF is given by the following equation: \\
+\boxed{ PDF = \cos{\theta} }
+
+(b) And integrating from 0 to $\theta$ gives the CDF: \\
+\boxed{ CDF = \sin{x} }
+
+(c) Finding where the cdf is equal to 0.5 gives the mean $x$ value of a function. \\
+$$ 0.5 = \sin{\theta} $$
+Then plugging this into the original pdf gives the average value for $\omega$: \boxed{0.866}
+
+(d) And using the CDF, with bounds at 30$^\circ$ and 45$^\circ$ gives the fraction \boxed{0.20711}
 
 
 % ----------------------------------------------------------------------------------------------------- 
