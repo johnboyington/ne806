@@ -3,6 +3,7 @@ import numpy as np
 
 def gaussian_integration_factors(N):
     """A function that returns the abscissas and weight factors for gaussian integration."""
+    assert N in (10, 64), 'N must be 10 or 64.'
     if N == 10:
         X = np.array([-0.973906528517172, -0.865063366688985, -0.679409568299024,
                       -0.433395394129247, -0.148874338981631,  0.148874338981631,

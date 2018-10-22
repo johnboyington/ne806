@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import mpmath
 from gauss_factors import gaussian_integration_factors
 
@@ -59,7 +60,7 @@ def power_iteration(phi, B, tol):
         c = 2 / lam_2
 
     # return c_crit
-    return c
+    return phi, c
 
 
 def do_problem_two():
@@ -67,10 +68,12 @@ def do_problem_two():
     params = Problem_Parameters(64, 53.744, 0.0001)
     phi_i = initialize_flux(params.N)
     B = create_B(params.N, params.T)
-    c_crit = power_iteration(phi_i, B, params.tol)
-    return c_crit, B
+    phi, c_crit = power_iteration(phi_i, B, params.tol)
+    return phi, c_crit, B
 
 
 if __name__ == '__main__':
-    c, B = do_problem_two()
-    print(c)
+    phi, c, B = do_problem_two()
+    fig = plt.figure(0)
+    ax = fig.add_subplot(111)
+    ax.plot(phi)
