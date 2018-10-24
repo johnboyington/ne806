@@ -61,9 +61,9 @@ class Source_PDF(object):
         return
 
 
-def initialize():
-    """Initializes problem tally and source pdf."""
-    pass
+def leaked(position, params):
+    """Returns whether or not a particle has leaked."""
+    return False if position is None else (abs(position) < params.T)
 
 
 def sample_source_position(q, params):
@@ -83,9 +83,18 @@ def choose_path_length(params):
     return -(1 / params.Sig_t) * np.log(rand())
 
 
-def determine_reaction_type():
+def determine_reaction_type_and_update_counter(params, counter):
     """Chooses a reaction type for the particle."""
-    pass
+    rho = rand()
+    if rho <= params.Sig_f / params.Sig_t:
+        counter.N_f += 1
+        return 'fission'
+    elif rho < (params.Sig_f + params.Sig_c) / params.Sig_t:
+        counter.N_c += 1
+        return 'capture'
+    else:
+        counter.N_s += 1
+        return 'scatter'
 
 
 def update_scores():
@@ -106,12 +115,24 @@ def run_batch(N_b, q, params):
     # loop through N_b histories
     for i in range(N_b):
         par = Particle()
-        leaked = False
-        while not leaked:
+        while not leaked(par.position, params):
             par.position = sample_source_position(q, params)
             par.direction = choose_direction()
             d = choose_path_length(params)
-            par.position = par.position + d * par.direction
+            new_position = par.position + d * par.direction
+
+            # if it leaks, add it to leaked particles, else pick a reaction
+            if leaked(new_position, params):
+                # add to leaked particles
+                counter.D += (params.T - par.position) * par.direction
+                counter.N_l += 1
+            else:
+                # update track length and pick a reaction
+                counter.D += d
+                par.position = new_position
+                reaction = determine_reaction_type_and_update_counter(params, counter)
+                if reaction in ('fission', 'capture'):
+                    break
 
 
 def run(N_b, n_b, q, params):
