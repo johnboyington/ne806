@@ -63,18 +63,26 @@ def power_iteration(phi, B, tol):
     return phi, c
 
 
-def do_problem_two():
+def do_problem_two(params):
     """Does problem 2."""
-    params = Problem_Parameters(64, 2, 0.00000001)
     phi_i = initialize_flux(params.N)
     B = create_B(params.N, params.T)
     phi, c_crit = power_iteration(phi_i, B, params.tol)
     return phi, c_crit, B
 
 
-if __name__ == '__main__':
-    phi, c, B = do_problem_two()
+def loop_problem_two():
+    """Loops problem two."""
+    c_crits = []
+    t_vals = np.linspace(0.01, 5, 100)
+    for t in t_vals:
+        params = Problem_Parameters(64, t, 0.00000001)
+        phi, c, B = do_problem_two(params)
+        c_crits.append(c)
     fig = plt.figure(0)
     ax = fig.add_subplot(111)
-    ax.plot(phi)
-    print(c)
+    ax.plot(c_crits)
+    return
+
+if __name__ == '__main__':
+    loop_problem_two()

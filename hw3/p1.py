@@ -1,15 +1,18 @@
+import numpy as np
 from numpy.random import rand
 
 
 class Slab_Parameters(object):
     """Container for all problem parameters."""
-    def __init__(self, T, Sig_f, Sig_c, Sig_s):
+    def __init__(self, T, Sig_c, Sig_s, Sig_f, nu_bar, n_t):
         self.T = T
-        self.Sig_f = Sig_f
         self.Sig_c = Sig_c
         self.Sig_s = Sig_s
+        self.Sig_f = Sig_f
         self.Sig_t = Sig_f + Sig_c + Sig_s
-        self.nu_bar = 2.54
+        self.nu_bar = nu_bar
+        self.n_t = n_t
+        self.edges = np.linspace(-self.T, self.T, self.n_t + 1)
         return
 
 
@@ -43,12 +46,19 @@ class Particle(object):
     """Container for an individual particle's information."""
     def __init__(self):
         self.position = None
+        self.direction = None
 
 
 class Source_PDF(object):
     """Container for source distribution."""
-    def __init__(self):
-        pass
+    def __init__(self, n_t):
+        self.pdf = np.ones(n_t) / n_t
+        self.cdf = np.cumsum(self.pdf)
+
+    def update_dist(self, dist):
+        self.pdf = dist / np.sum(dist)
+        self.cdf = np.cumsum(self.pdf)
+        return
 
 
 def initialize():
@@ -56,19 +66,21 @@ def initialize():
     pass
 
 
-def sample_source_position():
+def sample_source_position(q, params):
     """Chooses a source position from the source pdf."""
-    pass
+    i = np.searchsorted(q.cdf, rand())
+    l, r = params.edges[i:i+2]
+    return ((r - l) * rand()) + l
 
 
 def choose_direction():
     """Chooses a direction for the particle."""
-    pass
+    return 1 if rand() > 0.5 else -1
 
 
-def choose_path_length():
+def choose_path_length(params):
     """Determines the path length for the particle to travel."""
-    pass
+    return -(1 / params.Sig_t) * np.log(rand())
 
 
 def determine_reaction_type():
@@ -86,7 +98,7 @@ def estimate_keff():
     pass
 
 
-def run_batch(N_b, q):
+def run_batch(N_b, q, params):
     """Runs a single batch of particles."""
     # initialize counter
     counter = Counter()
@@ -94,7 +106,12 @@ def run_batch(N_b, q):
     # loop through N_b histories
     for i in range(N_b):
         par = Particle()
-        par.position = sample_source_position()
+        leaked = False
+        while not leaked:
+            par.position = sample_source_position(q, params)
+            par.direction = choose_direction()
+            d = choose_path_length(params)
+            par.position = par.position + d * par.direction
 
 
 def run(N_b, n_b, q, params):
@@ -105,10 +122,10 @@ def run(N_b, n_b, q, params):
 
     # loop through n_b batches
     for i in range(n_b):
-        run_batch(N_b, q)
+        run_batch(N_b, q, params)
 
 
 if __name__ == '__main__':
-    params = Slab_Parameters()
-    q = Source_PDF()
-    run(1000, 10, params)
+    params = Slab_Parameters(40, 0.011437, 0.05, 0.013, 2.5, 10)
+    q = Source_PDF(params.n_t)
+    run(1000, 10, q, params)
