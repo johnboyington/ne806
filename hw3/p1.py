@@ -157,6 +157,6 @@ def run(N_b, n_b, q, params):
 
 
 if __name__ == '__main__':
-    params = Slab_Parameters(40, 0.011437, 0.05, 0.013, 2.5, 10)
+    params = Slab_Parameters(40, 0.011437, 0.05, 0.013, 2.5, 50)
     q = Source_PDF(params.n_t)
-    run(5000, 12, q, params)
+    run(10000, 8, q, params)
