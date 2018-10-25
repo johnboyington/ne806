@@ -1,5 +1,6 @@
 import numpy as np
 from numpy.random import rand
+import matplotlib.pyplot as plt
 
 
 class Slab_Parameters(object):
@@ -18,11 +19,11 @@ class Slab_Parameters(object):
 
 class Counter(object):
     """Container for problem tally information."""
-    def __init__(self):
+    def __init__(self, n_t):
         self.N = 0
         self.N_l = 0
         self.N_c = 0
-        self.N_f = 0
+        self.N_f = np.zeros(n_t)
         self.N_s = 0
         self.D = 0
         return
@@ -63,7 +64,7 @@ class Source_PDF(object):
 
 def leaked(position, params):
     """Returns whether or not a particle has leaked."""
-    return False if position is None else (abs(position) < params.T)
+    return False if position is None else (abs(position) > params.T)
 
 
 def sample_source_position(q, params):
@@ -83,11 +84,12 @@ def choose_path_length(params):
     return -(1 / params.Sig_t) * np.log(rand())
 
 
-def determine_reaction_type_and_update_counter(params, counter):
+def determine_reaction_type_and_update_counter(particle, params, counter):
     """Chooses a reaction type for the particle."""
     rho = rand()
     if rho <= params.Sig_f / params.Sig_t:
-        counter.N_f += 1
+        i = np.searchsorted(params.edges, particle.position)
+        counter.N_f[i - 1] += 1
         return 'fission'
     elif rho < (params.Sig_f + params.Sig_c) / params.Sig_t:
         counter.N_c += 1
@@ -110,7 +112,7 @@ def estimate_keff():
 def run_batch(N_b, q, params):
     """Runs a single batch of particles."""
     # initialize counter
-    counter = Counter()
+    counter = Counter(params.n_t)
 
     # loop through N_b histories
     for i in range(N_b):
@@ -130,23 +132,31 @@ def run_batch(N_b, q, params):
                 # update track length and pick a reaction
                 counter.D += d
                 par.position = new_position
-                reaction = determine_reaction_type_and_update_counter(params, counter)
+                reaction = determine_reaction_type_and_update_counter(par, params, counter)
                 if reaction in ('fission', 'capture'):
                     break
+    return counter
 
 
 def run(N_b, n_b, q, params):
     """Runs a series of batches to estimate the slab k effective."""
-    # initialize scores and problem parameters
-    
+    # initialize scores and problem parameters and plotting
+    fig = plt.figure(0)
+    ax = fig.add_subplot(111)
     score = Score()
 
     # loop through n_b batches
     for i in range(n_b):
-        run_batch(N_b, q, params)
+        counter = run_batch(N_b, q, params)
+        q.update_dist(counter.N_f)
+
+        # plot updated fission probabilities
+        x = (params.edges[1:] + params.edges[:-1]) / 2
+        ax.plot(x, counter.N_f, 'k', alpha=i/n_b)
+        
 
 
 if __name__ == '__main__':
     params = Slab_Parameters(40, 0.011437, 0.05, 0.013, 2.5, 10)
     q = Source_PDF(params.n_t)
-    run(1000, 10, q, params)
+    run(5000, 12, q, params)
