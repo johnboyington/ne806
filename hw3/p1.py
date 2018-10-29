@@ -23,7 +23,8 @@ class Counter(object):
         self.N = 0
         self.N_l = 0
         self.N_c = 0
-        self.N_f = np.zeros(n_t)
+        self.fission_spec = np.zeros(n_t)
+        self.N_f = 0
         self.N_s = 0
         self.D = 0
         return
@@ -32,6 +33,10 @@ class Counter(object):
 class Score(object):
     """Container for problem score information."""
     def __init__(self):
+        self.N_cumulative = 0
+        self.D_cumulative = 0
+        self.S_l = 0
+        self.S2_l = 0
         self.S_c = 0
         self.S2_c = 0
         self.S_f = 0
@@ -76,7 +81,7 @@ def sample_source_position(q, params):
 
 def choose_direction():
     """Chooses a direction for the particle."""
-    return 1 if rand() > 0.5 else -1
+    return 1 - 2 * rand()
 
 
 def choose_path_length(params):
@@ -89,7 +94,8 @@ def determine_reaction_type_and_update_counter(particle, params, counter):
     rho = rand()
     if rho <= params.Sig_f / params.Sig_t:
         i = np.searchsorted(params.edges, particle.position)
-        counter.N_f[i - 1] += 1
+        counter.fission_spec[i - 1] += 1
+        counter.N_f = np.sum(counter.fission_spec)
         return 'fission'
     elif rho < (params.Sig_f + params.Sig_c) / params.Sig_t:
         counter.N_c += 1
@@ -99,14 +105,35 @@ def determine_reaction_type_and_update_counter(particle, params, counter):
         return 'scatter'
 
 
-def update_scores():
+def update_score(score, counter, N_b):
     """Tallies the particle information whenever a history ends."""
-    pass
+    score.N_cumulative += N_b
+    score.S_f += counter.N_f
+    score.S_s += counter.N_s
+    score.S_c += counter.N_c
+    score.S_l += counter.N_l
+    score.S_t += counter.N_c + counter.N_s + counter.N_f
+    score.D_cumulative += counter.D
 
 
-def estimate_keff():
+def estimate_keff(score, params):
     """Estimates the k effective for the slab."""
-    pass
+    # fission estimator
+    k_eff_f = (params.nu_bar * score.S_f) / score.N_cumulative
+
+    # collision estimator
+    k_eff_c = ((score.S_t) * (params.nu_bar * (params.Sig_f / params.Sig_t))) / score.N_cumulative
+
+    # absorption estimator
+    k_eff_a = ((score.S_c + score.S_f) / score.N_cumulative) * (params.nu_bar * (params.Sig_f / (params.Sig_c + params.Sig_f)))
+
+    # track length estimator
+    k_eff_t = (score.D_cumulative * params.Sig_f * params.nu_bar) / score.N_cumulative
+
+    # format printing
+    s = 'k_eff_f: {:10.8f}\tk_eff_c: {:10.8f}\tk_eff_a: {:10.8f}\tk_eff_t: {:10.8f}'.format(k_eff_f, k_eff_c, k_eff_a, k_eff_t)
+    print(s)
+    return k_eff_t
 
 
 def run_batch(N_b, q, params):
@@ -126,8 +153,12 @@ def run_batch(N_b, q, params):
             # if it leaks, add it to leaked particles, else pick a reaction
             if leaked(new_position, params):
                 # add to leaked particles
-                counter.D += (params.T - par.position) * par.direction
+                if par.direction < 0:
+                    counter.D += (params.T + par.position) / abs(par.direction)
+                else:
+                    counter.D += (params.T - par.position) / abs(par.direction)
                 counter.N_l += 1
+                par.position = new_position
             else:
                 # update track length and pick a reaction
                 counter.D += d
@@ -138,7 +169,7 @@ def run_batch(N_b, q, params):
     return counter
 
 
-def run(N_b, n_b, q, params):
+def run(N_b, n_b, q, params, plot_fiss=False):
     """Runs a series of batches to estimate the slab k effective."""
     # initialize scores and problem parameters and plotting
     fig = plt.figure(0)
@@ -146,17 +177,44 @@ def run(N_b, n_b, q, params):
     score = Score()
 
     # loop through n_b batches
+    print('\nRunning Thickness:\t{}'.format(params.T))
     for i in range(n_b):
         counter = run_batch(N_b, q, params)
-        q.update_dist(counter.N_f)
+        q.update_dist(counter.fission_spec)
+        update_score(score, counter, N_b)
+        k_eff = estimate_keff(score, params)
 
         # plot updated fission probabilities
-        x = (params.edges[1:] + params.edges[:-1]) / 2
-        ax.plot(x, counter.N_f, 'k', alpha=i/n_b)
-        
+        if plot_fiss:
+            x = (params.edges[1:] + params.edges[:-1]) / 2
+            ax.set_xlabel('$x (cm)$')
+            ax.set_ylabel('$\Phi (cm^{-2}s^{-1})$')
+            phi = (counter.fission_spec / params.Sig_f) / N_b
+            np.save('p1.npy', phi)
+            ax.plot(x, phi, 'k', alpha=i/n_b)
+            fig.savefig('t_crit.png', dpi=250)
+
+    return k_eff
 
 
 if __name__ == '__main__':
-    params = Slab_Parameters(40, 0.011437, 0.05, 0.013, 2.5, 50)
+    ts = np.linspace(15, 40, 6)
+    k_eff = []
+    for T in ts:
+        params = Slab_Parameters(T, 0.011437, 0.05, 0.013, 2.5, 64)
+        q = Source_PDF(params.n_t)
+        k_eff.append(run(10000, 10, q, params))
+
+    # t_crit case
+    params = Slab_Parameters(26.872, 0.011437, 0.05, 0.013, 2.5, 64)
     q = Source_PDF(params.n_t)
-    run(10000, 8, q, params)
+    run(1000000, 30, q, params, plot_fiss=True)
+
+    # plotting
+    fig = plt.figure(1)
+    ax = fig.add_subplot(111)
+    ax.set_xlabel('T (cm)')
+    ax.set_ylabel('$k_{eff}$')
+
+    ax.plot(ts, k_eff, 'k')
+    fig.savefig('k_vs_T.png', dpi=250)

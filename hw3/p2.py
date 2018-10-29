@@ -74,14 +74,48 @@ def do_problem_two(params):
 def loop_problem_two():
     """Loops problem two."""
     c_crits = []
-    t_vals = np.linspace(0.01, 5, 100)
+    t_vals = np.linspace(0.01, 5, 5)
     for t in t_vals:
         params = Problem_Parameters(64, t, 0.00000001)
         phi, c, B = do_problem_two(params)
         c_crits.append(c)
+
+    # plotting c_crit
     fig = plt.figure(0)
     ax = fig.add_subplot(111)
-    ax.plot(c_crits)
+    ax.set_xlabel('Thickness (cm)')
+    ax.set_ylabel('$\ln (c_{crit} - 1)$')
+    c_crits = np.array(c_crits)
+    ax.plot(t_vals, np.log(c_crits - 1), 'k')
+    fig.savefig('c_crit.png', dpi=250)
+
+    # plotting phi
+    T = 2
+    x = np.linspace(-T, T, 64)
+    params = Problem_Parameters(64, 2, 0.00000001)
+    phi, c, B = do_problem_two(params)
+    np.save('p2.npy', phi)
+
+    fig = plt.figure(1)
+    ax = fig.add_subplot(111)
+    ax.set_xlabel('$x$ (cm)')
+    ax.set_ylabel('$\Phi$')
+    ax.plot(x, phi, 'k')
+    fig.savefig('phi.png', dpi=250)
+
+    # plotting phi
+    T = 0.5
+    x = np.linspace(-T, T, 64)
+    params = Problem_Parameters(64, T, 0.00000001)
+    phi, c, B = do_problem_two(params)
+    np.save('p2_05.npy', phi)
+
+    # plotting phi
+    T = 10
+    x = np.linspace(-T, T, 64)
+    params = Problem_Parameters(64, T, 0.00000001)
+    phi, c, B = do_problem_two(params)
+    np.save('p2_10.npy', phi)
     return
 
 if __name__ == '__main__':

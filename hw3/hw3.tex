@@ -71,9 +71,13 @@
 Homework \#3 due Thurs. October 23, 2018
  
 Solutions by: John Boyington
+
 \newline
 \bigskip
  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                        PROBLEM 1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \textbf{Problem 1:} Consider a homogeneous infinite slab of thickness $2T$ located in a vacuum. Write a
 Monte Carlo program to calculate (a) $k_{eff}$, (b) the neutron leakage probability $PL$, and (c) the critical flux density distribution. Assume that a one-speed transport model can be used and that scattering and fission neutrons are emitted isotropically in the laboratory coordinate system.
@@ -96,7 +100,31 @@ Of particular interest is the thickness $2T = 53.744$ cm. Find the critical thic
 \bigbreak
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \textbf{Solution}
+
+Using my Monte Carlo code, I was able to create the following plot that shows the $k_{eff}$ against half thickness $T$.
+Shown also is the flux profile for the thickness $2T = 53.744$ cm.
+The flux profile shows how it is updated over time, with the darkest lines being the most current batches.
+These were run with 15 batches and a batch size of $1 \times 10^6$ histories.
+
+\begin{center}
+\includegraphics[totalheight=.40\textheight]{k_vs_T.png}
+\includegraphics[totalheight=.40\textheight]{t_crit.png}
+\end{center}
+
+The $k_eff$ increases with increasing $T$.
+This follows intuition, which suggests that as more material is available for reflection and fissioning, the more neutrons will remain non-leaked.
+
+The code, as written, currently contains a full implementation of the algorithm described in the lecture 13 slides.
+It begins with a flat profile for the fission, and then as it tallies $N_f$, the number of fissions in a particular spatial region, it replaces the source sampling with the latest fission distribution.
+Particles are ran in batches, each particle is born with a particular position and direction.
+From there, a distance is selected for the particle to travel using $\Sigma_t$.
+If the particle leaks or absorbed, a new history is began.
+If it scatters, then a new direction and travel distance is chosen.
+
+
  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                        PROBLEM 2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \textbf{Problem 2:}Write anther computer program to solve for the critical value of $c$, $c_{crit}$, using the one speed integral transport equation with isotropic fission and scattering, for an infinite bare homogeneous slab. With the results from your program, plot $ln (c_{crit} - 1)$ versus the slab thickness $2T$ for $0<2T<10$ mean-free-path lengths. HINT: as a check on your program, you should obtain $c_{crit}$ = 1.277101824 . . . when the thickness of the slab is 2 mean-free-path lengths.
@@ -104,14 +132,43 @@ Of particular interest is the thickness $2T = 53.744$ cm. Find the critical thic
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \textbf{Solution}
+
+The code was implemented to solve the NTE and was ran for slab thicknesses between $0<T<5$ mean-free-path lengths.
+
+\begin{center}
+\includegraphics[totalheight=.40\textheight]{c_crit.png}
+\end{center}
+
+This code, using the procedures described in lecture 9, uses power iteration to solve the following represenation of the transport equation:
+
+$$ B \Phi = \frac{2}{c} \Phi $$
+
+First, the $B$ matrix is prepared, which represents the effect that a flux in any particular cell will have on each other cell.
+Then the power iteration method, takes an initial $\Phi$, which in our case is an identity array, and iteratively updates $\Phi$ and $c$, until converging within some nominal tolerance.
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                        PROBLEM 3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
-\textbf{Problem 3:} Use your NTE code to find the critical thickness of the slab analyzed with the Monte Carlo method in your first problem set $\Sigma_c = 0.011437\quad cm^{-1}, \quad \Sigma_s = 0.05\quad cm^{-1}, \quad \Sigma_f = 0.013\quad cm^{-1}, \quad \nu=2.5$. Compare the critical flux profiles found by each method.
+\textbf{Problem 3:} Use your NTE code to find the critical thickness of the slab analyzed with the Monte Carlo method in your first problem set ($\Sigma_c = 0.011437\quad cm^{-1}, \quad \Sigma_s = 0.05\quad cm^{-1}, \quad \Sigma_f = 0.013\quad cm^{-1}, \quad \nu=2.5$).
+Compare the critical flux profiles found by each method.
 \bigbreak
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \textbf{Solution}
- 
+
+Shown on the following graph is the comparison for a slab of thickness $2T = 53.744$ cm.
+
+\begin{center}
+\includegraphics[totalheight=.40\textheight]{comparison.png}
+\end{center}
+
+The profiles have both been normalized to one - each is comprised of 64 bins.
+The Monte Carlo solution is much more noisy, obviously a result of the stochastic nature of MC simulation.
+However, the tail and inflection seen in power iteration is also not present within the MC results.
+Instead, it curved downward across the entire domain.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                        PROBLEM 4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \textbf{Problem 4:}Compare the critical flux profiles obtained with transport and diffusion theories for both a thin and thick slab (say, for example, T = 0.5 and T = 10 mean-free path lengths).
@@ -120,6 +177,20 @@ Complete documentation of your programs, including theory, example outputs, and 
 \bigbreak
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \textbf{Solution}
+
+The following two plots compare $T=0.5mfp$ (top) and $T=10mfp$ (bottom).
+It can be seen that the diffusion approximation, while performing better for the larger case, performs terribly in the 0.5 mfp case.
+This is due in part to the diffusion approximation's dealing with boundary conditions.
+For the shorter case, the extrapolated boundary is well beyond the edges of the domain of the problem.
+Because the diffusion approximation is simply a functional fit, it cannot capture these effects properly in a small region.
+Transport theory is much more applicable to either case, and more properly captures the flux through the medium.
+
+\begin{center}
+\includegraphics[totalheight=.40\textheight]{p4_05.png}
+\includegraphics[totalheight=.40\textheight]{p4_10.png}
+\end{center}
+
+
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
