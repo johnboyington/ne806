@@ -90,6 +90,7 @@ def plot_it(phi, label, savename):
     plt.savefig(savename + '.png', dpi=300)
     plt.clf()
 
+
 if __name__ == '__main__':
     phi_slab = diffusion(100, 45, 0.600, 0.005, 10**8, source_a, geometry='slab')
     phi_cyl = diffusion(100, 45, 0.600, 0.005, 10**8, source_b, geometry='cylinder')
