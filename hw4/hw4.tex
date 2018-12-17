@@ -70,7 +70,7 @@
 \LARGE{NE-806: Neutronics}
  
 \large
-Homework \#4 due Thurs. November 15th, 2018
+Homework \#4
  
 Solutions by: John Boyington
 \newline
@@ -376,6 +376,96 @@ The boundary conditions:
 
 
 
+A first collision source is used for the source term.
+
+\begin{align*}
+
+    \phi_{left}(x) &= \frac{\frac{S_0}{D}\cos(\alpha x)}{\alpha^2+B^2}+C_1e^{Bx}+C_2e^{-Bx} \\
+
+    \phi'_{left}(x) &= -\frac{\frac{\alpha S_0}{D}\sin(\alpha x)}{\alpha^2+B^2}+C_1Be^{Bx}-C_2Be^{-Bx} \\
+
+    \phi_{right}(x) &= -\frac{\frac{S_0}{D}e^{\Sigma_a(x-T)}}{\Sigma_a^2-B^2}+Q_1e^{Bx}+Q_2e^{-Bx} \\
+
+    \phi'_{right}(x) &= -\frac{\frac{\Sigma_a S_0}{D}e^{\Sigma_a(x-T)}}{\Sigma_a^2-B^2}+Q_1Be^{Bx}-Q_2Be^{-Bx}
+
+\end{align*}
+
+\bigbreak
+
+Apply BC1:
+
+\begin{align*}
+
+    0 &= J^+(0) =\frac{\phi(0)}{4}-\frac{D}{2}\phi'(0)=0 \\
+
+    0 &= 0.25*\bigg[\frac{\frac{S_0}{D}}{\alpha^2+B^2}+C_1+C_2\bigg]-\frac{D}{2}[C_1B-C_2B] \\
+
+    0 &= C_1[1-2DB]+C_2[1+2DB]+\frac{S_0}{4D(\alpha^2+B^2)} \\
+
+    C_1 &= -C_2\frac{[1+2DB]}{[1-2DB]}-\frac{S_0}{4D(\alpha^2+B^2)[1-2DB]}
+
+\end{align*}
+
+\bigbreak
+
+Apply BC4:
+
+\begin{align*}
+
+    0 &= J^-(2T) = \frac{\phi(2T)}{4}+\frac{D}{2}\phi'(2T) \\
+
+    0 &= 0.25*\bigg[-\frac{\frac{S_0}{D}e^{\Sigma_a(T)}}{\Sigma_a^2-B^2}+Q_1e^{2BT}+Q_2e^{-2BT}\bigg]+\frac{D}{2}\bigg[-\frac{\frac{\Sigma_a S_0}{D}e^{\Sigma_a(T)}}{\Sigma_a^2-B^2}+Q_1Be^{2BT}-Q_2Be^{-2BT}\bigg] \\
+
+    0 &= Q_1\bigg[e^{2TB}+2DBe^{2TB}\bigg] + Q_2\bigg[e^{-2TB}-2DBe^{-2TB}\bigg]-\frac{\frac{ S_0}{D}e^{\Sigma_a(T)}(1+2D\Sigma_a)}{\Sigma_a^2-B^2} \\
+
+    Q_1 &= -Q_2 \frac{(e^{-2TB})[1-2DB]}{(e^{2TB})[1+2DB]} + \frac{\frac{ S_0}{D}e^{\Sigma_a(T)}(1+2D\Sigma_a)}{(\Sigma_a^2-B^2)(e^{2TB})[1+2DB]}
+
+\end{align*}
+
+\bigbreak
+
+Plug into the $\phi(x)$ and $\phi'(x)$ equations above.
+
+\bigbreak
+
+\begin{align*}
+
+    \phi_L(T) &= \frac{\frac{S_0}{D}\cos(\alpha T)}{\alpha^2+B^2} - \frac{S_0e^{BT}}{4D(\alpha^2+B^2)[1-2DB]} +C_2\bigg[e^{-BT}-e^{BT}\frac{[1+2DB]}{[1-2DB]}\bigg] \\
+
+    \phi'_L(T) &= -\frac{\alpha\frac{S_0}{D}\sin(\alpha T)}{\alpha^2+B^2} - \frac{S_0Be^{BT}}{4D(\alpha^2+B^2)[1-2DB]} -C_2\bigg[Be^{-BT}+Be^{BT}\frac{[1+2DB]}{[1-2DB]}\bigg] \\
+
+    \phi_R(T) &= \frac{-\frac{S_0}{D}}{\Sigma_a^2-B^2} + \frac{\frac{S_0}{D}e^{\Sigma_a T}(1+2D\Sigma_a)e^{BT}}{(\Sigma_a^2-B^2)(e^{2TB})[1+2DB]} +Q_2\bigg[e^{-BT}-e^{BT}\frac{(e^{-2BT})[1-2DB]}{(e^{2BT})[1+2DB]}\bigg] \\
+
+    \phi'_R(T) &= \frac{-\Sigma_a\frac{S_0}{D}}{\Sigma_a^2-B^2} + \frac{\frac{S_0}{D}Be^{\Sigma_a T}(1+2D\Sigma_a)e^{BT}}{(\Sigma_a^2-B^2)(e^{2TB})[1+2DB]} -Q_2\bigg[Be^{-BT}+Be^{BT}\frac{(e^{-2BT})[1-2DB]}{(e^{2BT})[1+2DB]}\bigg]
+
+\end{align*}
+
+\bigbreak
+
+Find the coefficients $C_1$ and $Q_1$.
+
+\begin{empheq}{align*}
+
+    \frac{\frac{S_0}{D}\cos(\alpha T)}{\alpha^2+B^2} - \frac{S_0e^{BT}}{4D(\alpha^2+B^2)[1-2DB]} +C_2\bigg[e^{-BT}-e^{BT}\frac{[1+2DB]}{[1-2DB]}\bigg] &=  \frac{-\frac{S_0}{D}}{\Sigma_a^2-B^2} + \frac{\frac{S_0}{D}e^{\Sigma_a T}(1+2D\Sigma_a)e^{BT}}{(\Sigma_a^2-B^2)(e^{2TB})[1+2DB]} \\ &+Q_2\bigg[e^{-BT}-e^{BT}\frac{(e^{-2BT})[1-2DB]}{(e^{2BT})[1+2DB]}\bigg] \\
+
+    -\frac{\alpha\frac{S_0}{D}\sin(\alpha T)}{\alpha^2+B^2} - \frac{S_0Be^{BT}}{4D(\alpha^2+B^2)[1-2DB]} -C_2\bigg[Be^{-BT}+Be^{BT}\frac{[1+2DB]}{[1-2DB]}\bigg] &= -\frac{\Sigma_a\frac{S_0}{D}}{\Sigma_a^2-B^2} + \frac{\frac{S_0}{D}Be^{\Sigma_a T}(1+2D\Sigma_a)e^{BT}}{(\Sigma_a^2-B^2)(e^{2TB})[1+2DB]} \\ &-Q_2\bigg[Be^{-BT}+Be^{BT}\frac{(e^{-2BT})[1-2DB]}{(e^{2BT})[1+2DB]}\bigg]
+
+\end{empheq}
+
+\bigbreak
+
+
+\begin{empheq}{align*}
+
+    C_2 &= \frac{Q_2\bigg[e^{-BT}-e^{BT}\frac{(e^{-2BT})[1-2DB]}{(e^{2BT})[1+2DB]}\bigg] + \frac{-\frac{S_0}{D}}{\Sigma_a^2-B^2} + \frac{\frac{S_0}{D}e^{\Sigma_a T}(1+2D\Sigma_a)e^{BT}}{(\Sigma_a^2-B^2)(e^{2TB})[1+2DB]} + \frac{S_0e^{BT}}{4D(\alpha^2+B^2)[1-2DB]} - \frac{\frac{S_0}{D}\cos(\alpha T)}{\alpha^2+B^2}}{\bigg[e^{-BT}-e^{BT}\frac{[1+2DB]}{[1-2DB]}\bigg]}\\
+
+    Q_2 &= \frac{C_2\bigg[Be^{-BT}+Be^{BT}\frac{[1+2DB]}{[1-2DB]}\bigg]-\frac{\Sigma_a\frac{S_0}{D}}{\Sigma_a^2-B^2} + \frac{\frac{S_0}{D}Be^{\Sigma_a T}(1+2D\Sigma_a)e^{BT}}{(\Sigma_a^2-B^2)(e^{2TB})[1+2DB]} + \frac{\alpha\frac{S_0}{D}\sin(\alpha T)}{\alpha^2+B^2} + \frac{S_0Be^{BT}}{4D(\alpha^2+B^2)[1-2DB]}}{\bigg[Be^{-BT}+Be^{BT}\frac{(e^{-2BT})[1-2DB]}{(e^{2BT})[1+2DB]}\bigg]}
+
+\end{empheq}
+
+$Q_2$ is substituted into $C_2$ and then back inserted into previous equations to obtain coefficients for each slab's equation.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                         PROBLEM 2
@@ -537,6 +627,124 @@ In the slab problem, the solution seems to be a decent approximation for the $n=
 \end{figure}
 
  
-\bigbreak
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+The following code was used in this assignment:
+
+\begin{verbatim}
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def diffusion(n, T, D, Sig_a, S_0, source, geometry='slab'):
+    """A finite difference diffusion solver."""
+
+    # guarantee geometry in correct format
+    assert geometry in ['slab', 'cylinder', 'sphere'], "Geometry must either be 'slab', 'cylinder' or 'sphere'."
+
+    # calculate L
+    L = np.sqrt(D / Sig_a)
+
+    # calculate x points and the step between them
+    x = np.linspace(0, T, n)
+    delta = x[1] - x[0]
+
+    # set up A matrix
+    A = np.zeros((len(x), len(x)))
+
+    # set up source vector
+    s = source(x, S_0) / D
+
+    # loop through x's and update A matrix
+    for i in range(len(x)):
+
+        # first boundary condition
+        if i == 0:
+            if geometry == 'slab':
+                A[i, i] = (1/4) - (D / (2 * delta))
+                A[i, i + 1] = (D / (2 * delta))
+                s[i] = 0
+
+            elif geometry in ['sphere', 'cylinder']:
+                A[i, i] = (-1) / delta
+                A[i, i + 1] = 1 / delta
+                s[i] = 0
+
+        # second boundary condition
+        elif i == len(x) - 1:
+            if geometry == 'slab':
+                A[i, i] = (1/4) - (D / (2 * delta))
+                A[i, i - 1] = (D / (2 * delta))
+                s[i] = 0
+
+            elif geometry in ['sphere', 'cylinder']:
+                A[i, i - 1] = (1/4) - (D / (2 * delta))
+                A[i, i] = (D / (2 * delta))
+                s[i] = 0
+
+        # for every other point
+        else:
+            if geometry == 'slab':
+                A[i, i - 1] = (-1) / delta**2
+                A[i, i] = (2 / delta**2) + (1 / L**2)
+                A[i, i + 1] = (-1) / delta**2
+
+            elif geometry == 'sphere':
+                A[i, i - 1] = (-1) / delta**2
+                A[i, i] = (x[i+1]**2/(x[i]**2 * delta**2) + 1 / delta**2 + 1 / L**2)
+                A[i, i + 1] = (-x[i+1]**2) / (x[i]**2 * delta**2)
+
+            elif geometry == 'cylinder':
+                A[i, i - 1] = (-1) / delta**2
+                A[i, i] = (x[i+1]/(x[i] * delta**2) + 1 / delta**2 + 1 / L**2)
+                A[i, i + 1] = (-x[i+1]) / (x[i] * delta**2)
+
+    # solve the system of equations
+    return np.linalg.solve(A, s)
+
+
+def source_a(x, S_0):
+    """The distributed source for part a."""
+    return S_0 * x**2
+
+
+def source_b(x, S_0):
+    """The distributed source for parts b and c."""
+    return S_0 * np.ones(len(x))
+
+
+def plot_it(phi, n, label, savename):
+    """Utility for plotting."""
+    plt.figure(0)
+    plt.xlabel('$\hat{r}$')
+    plt.ylabel('$\Phi$')
+    for i, p in enumerate(phi):
+        plt.plot(np.linspace(0, 45, n[i]), p, label=label[i], linewidth=0.5)
+    plt.legend()
+    plt.savefig(savename + '.png', dpi=300)
+    plt.clf()
+
+
+if __name__ == '__main__':
+    # slab geometry
+    phi_slab = [diffusion(10, 45, 0.600, 0.005, 10**8, source_a, geometry='slab'),
+                diffusion(100, 45, 0.600, 0.005, 10**8, source_a, geometry='slab'),
+                diffusion(1000, 45, 0.600, 0.005, 10**8, source_a, geometry='slab')]
+
+    # cylindrical geometry
+    phi_cyl = [diffusion(10, 45, 0.600, 0.005, 10**8, source_b, geometry='cylinder'),
+               diffusion(100, 45, 0.600, 0.005, 10**8, source_b, geometry='cylinder'),
+               diffusion(1000, 45, 0.600, 0.005, 10**8, source_b, geometry='cylinder')]
+
+    # spherical geometry
+    phi_sph = [diffusion(10, 45, 0.600, 0.005, 10**8, source_b, geometry='sphere'),
+               diffusion(100, 45, 0.600, 0.005, 10**8, source_b, geometry='sphere'),
+               diffusion(1000, 45, 0.600, 0.005, 10**8, source_b, geometry='sphere')]
+
+    # plot the slab
+    plot_it(phi_slab, [10, 100, 1000], ['Slab n=10', 'Slab n=100', 'Slab n=1000'], 'slab')
+    plot_it(phi_cyl, [10, 100, 1000], ['Cylinder n=10', 'Cylinder n=100', 'Cylinder n=1000'], 'cyl')
+    plot_it(phi_sph, [10, 100, 1000], ['Sphere n=10', 'Sphere n=100', 'Sphere n=1000'], 'sph')
+\end{verbatim}
+
 \end{document}
